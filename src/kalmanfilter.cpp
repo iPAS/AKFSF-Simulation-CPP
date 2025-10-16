@@ -35,6 +35,12 @@ void KalmanFilter::predictionStep(double dt)
 
             // Assume the initial position is (X,Y) = (0,0) m
             // Assume the initial velocity is 5 m/s at 45 degrees (VX,VY) = (5*cos(45deg),5*sin(45deg)) m/s
+            state << 0, 0, 5*cos(M_PI/4), 5*sin(M_PI/4);
+
+            cov(0,0) = INIT_POS_STD * INIT_POS_STD;
+            cov(1,1) = INIT_POS_STD * INIT_POS_STD;
+            cov(2,2) = INIT_VEL_STD * INIT_VEL_STD;
+            cov(3,3) = INIT_VEL_STD * INIT_VEL_STD;
 
             setState(state);
             setCovariance(cov);
@@ -46,12 +52,28 @@ void KalmanFilter::predictionStep(double dt)
         VectorXd state = getState();
         MatrixXd cov = getCovariance();
 
-        // Implement The Kalman Filter Prediction Step for the system in the  
+        // Implement The Kalman Filter Prediction Step for the system in the
         // section below.
         // Hint: You can use the constants: ACCEL_STD
         // ----------------------------------------------------------------------- //
         // ENTER YOUR CODE HERE
 
+        MatrixXd F = MatrixXd::Identity(4, 4);
+        F(0, 2) = dt;
+        F(1, 3) = dt;
+
+        MatrixXd Q = Matrix2d::Zero();
+        Q(0, 0) = ACCEL_STD * ACCEL_STD;
+        Q(1, 1) = ACCEL_STD * ACCEL_STD;
+
+        MatrixXd L = MatrixXd(4, 2);
+        L << (0.5*dt*dt),           0,
+                       0, (0.5*dt*dt),
+                      dt,           0,
+                       0,          dt;
+
+        state = F * state;  // Input ?
+        cov = F * cov * F.transpose() + L * Q * L.transpose();
 
         // ----------------------------------------------------------------------- //
 
@@ -67,12 +89,12 @@ void KalmanFilter::handleGPSMeasurement(GPSMeasurement meas)
         VectorXd state = getState();
         MatrixXd cov = getCovariance();
 
-        // Implement The Kalman Filter Update Step for the GPS Measurements in the 
+        // Implement The Kalman Filter Update Step for the GPS Measurements in the
         // section below.
         // Hint: Assume that the GPS sensor has a 3m (1 sigma) position uncertainty.
         // Hint: You can use the constants: GPS_POS_STD
         // ----------------------------------------------------------------------- //
-        // ENTER YOUR CODE HERE 
+        // ENTER YOUR CODE HERE
 
 
         // ----------------------------------------------------------------------- //
@@ -96,7 +118,7 @@ void KalmanFilter::handleGPSMeasurement(GPSMeasurement meas)
             setState(state);
             setCovariance(cov);
         // ----------------------------------------------------------------------- //
-    }        
+    }
 }
 
 Matrix2d KalmanFilter::getVehicleStatePositionCovariance()
