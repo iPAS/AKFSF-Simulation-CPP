@@ -12,9 +12,9 @@
 // -------------------------------------------------- //
 // YOU CAN USE AND MODIFY THESE CONSTANTS HERE
 constexpr bool INIT_ON_FIRST_PREDICTION = true;
-constexpr double INIT_POS_STD = 0;
-constexpr double INIT_VEL_STD = 0;
-constexpr double ACCEL_STD = 0;
+constexpr double INIT_POS_STD = 0;  // 5
+constexpr double INIT_VEL_STD = 0;  // 5./3.
+constexpr double ACCEL_STD = 0;  // .1
 constexpr double GPS_POS_STD = 3.0;
 // -------------------------------------------------- //
 
