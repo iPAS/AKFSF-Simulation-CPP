@@ -12,6 +12,7 @@
 // -------------------------------------------------- //
 // YOU CAN USE AND MODIFY THESE CONSTANTS HERE
 constexpr bool INIT_ON_FIRST_PREDICTION = false;  // true
+constexpr bool IGNORE_GPS_MEASUREMENT = false;  // false
 constexpr double INIT_POS_STD = 0;  // 5
 constexpr double INIT_VEL_STD = 0;  // 5./3.
 constexpr double ACCEL_STD = 0.1;  // .1
@@ -96,6 +97,13 @@ void KalmanFilter::handleGPSMeasurement(GPSMeasurement meas)
         // Hint: You can use the constants: GPS_POS_STD
         // ----------------------------------------------------------------------- //
         // ENTER YOUR CODE HERE
+
+        if (IGNORE_GPS_MEASUREMENT)
+        {
+            setState(state);
+            setCovariance(cov);
+            return;
+        }
 
         Vector2d z;  // Measurement vector. Read from GPS
         z << meas.x,
