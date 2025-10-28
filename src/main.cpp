@@ -15,6 +15,7 @@ const double GRID_SIZE = 500;
 const double GRID_SPACEING = 25;
 
 // Function Prototypes
+SimulationParams loadSimulationMyParameters();
 SimulationParams loadSimulation1Parameters();
 SimulationParams loadSimulation2Parameters();
 SimulationParams loadSimulation3Parameters();
@@ -85,6 +86,7 @@ int main( int argc, char* args[] )
                     case SDLK_RIGHTBRACKET: mSimulation.increaseTimeMultiplier(); break;
                     case SDLK_LEFTBRACKET: mSimulation.decreaseTimeMultiplier(); break;
                     case SDLK_r: mSimulation.reset(); break;
+                    case SDLK_BACKQUOTE: mSimulation.reset(loadSimulationMyParameters()); break;
                     case SDLK_1: mSimulation.reset(loadSimulation1Parameters()); break;
                     case SDLK_2: mSimulation.reset(loadSimulation2Parameters()); break;
                     case SDLK_3: mSimulation.reset(loadSimulation3Parameters()); break;
@@ -108,6 +110,17 @@ int main( int argc, char* args[] )
     SDL_Quit();
 
     return 0;
+}
+
+SimulationParams loadSimulationMyParameters()
+{
+    SimulationParams sim_params;
+    sim_params.profile_name = "My - Constant Velocity + GYRO + Zero Initial Conditions";
+    sim_params.gps_enabled = false;
+    sim_params.car_initial_velocity = 5;
+    sim_params.car_initial_psi = M_PI/180.0 * 45.0;
+    sim_params.car_commands.emplace_back(new MotionCommandMoveTo(500,500,5));
+    return sim_params;
 }
 
 SimulationParams loadSimulation1Parameters()
